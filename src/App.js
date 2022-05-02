@@ -2,16 +2,9 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Lives from './components/Lives';
 import Wordle from './components/Wordle';
-import Keyboard from './components/Keyboard';
+import UserInput from './components/UserInput';
 import WordsData from './data/WordsData';
-import {
-  Snackbar,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button
-} from '@mui/material';
+import { Snackbar } from '@mui/material';
 import './App.css';
 
 const App = () => {
@@ -19,7 +12,7 @@ const App = () => {
   const [letters, setLetters] = useState(['']);
   const [lives, setLives] = useState(5);
   const [openWarning, setOpenWarning] = useState(false);
-  const [openDlg, setOpenDlg] = useState(false);
+  const [definitions, setDefinitions] = useState([]);
 
   useEffect(() => {
     const getRandomWords = (num) => {
@@ -88,6 +81,7 @@ const App = () => {
           setLives(lives + 2);
         }
         setLetters([...letters, '']);
+        fetchDefinition(submittedWord);
       } else {
         setOpenWarning(true);
       }
@@ -108,9 +102,37 @@ const App = () => {
     };
 
     setWords(getRandomWords(5));
+    setDefinitions([]);
     setLetters(['']);
     setLives(5);
-    setOpenDlg(false);
+  };
+
+  const fetchDefinition = async (word) => {
+    try {
+      const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+      const response = await fetch(url);
+      const json = await response.json();
+      let defs = [];
+
+      json[0].meanings.forEach((m) => {
+        m.definitions.forEach((d) => {
+          defs.push(d.definition);
+        });
+      });
+
+      if (definitions.length === 0) {
+        setDefinitions([defs]);
+      } else {
+        setDefinitions([...definitions, defs]);
+      }
+    } catch (error) {
+      console.log(error);
+      if (definitions.length === 0) {
+        setDefinitions([['No definition found.']]);
+      } else {
+        setDefinitions([...definitions, ['No definition found.']]);
+      }
+    }
   };
 
   const isLetter = (str) => {
@@ -128,15 +150,21 @@ const App = () => {
       >
         <div className="wordles">
           {words.map((word, i) => (
-            <Wordle letters={letters} word={word} lives={lives} key={i} />
+            <Wordle
+              letters={letters}
+              word={word}
+              lives={lives}
+              definitions={definitions}
+              key={i}
+            />
           ))}
         </div>
       </div>
-      <Keyboard
+      <UserInput
         letters={letters[letters.length - 1]}
         onChange={handleInputChange}
         onEnter={handleEnter}
-        onRefresh={() => setOpenDlg(true)}
+        onReset={handleReset}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
@@ -146,19 +174,6 @@ const App = () => {
         message="Not in word list!"
         sx={{ margin: '6rem auto', width: '50%' }}
       />
-      <Dialog open={openDlg} onClose={() => setOpenDlg(false)}>
-        <DialogContent>
-          <DialogContentText>
-            Game will be restart. Are you sure?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDlg(false)}>No</Button>
-          <Button onClick={() => handleReset()} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 };

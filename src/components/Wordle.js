@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Row from './Row';
 
-const Wordle = ({ word, letters, lives }) => {
+const Wordle = ({ word, letters, lives, definitions }) => {
   const [correct, setCorrect] = useState(false);
   const [correctRowIndex, setCorretRowIndex] = useState(999);
 
@@ -33,6 +33,7 @@ const Wordle = ({ word, letters, lives }) => {
             finished={index < letters.length - 1}
             emptyRow={index > correctRowIndex}
             lives={lives}
+            definitions={definitions[index]}
             key={index}
           />
         );

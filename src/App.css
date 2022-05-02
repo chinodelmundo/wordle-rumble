@@ -20,19 +20,6 @@ body {
   border-bottom: 3pt solid gray;
 }
 
-.keyboard {
-  position: fixed;
-  top: auto;
-  bottom: 0;
-  width: 100%;
-  padding: 0.5rem;
-  border-top: 1pt solid gray;
-  background-color: white;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
 @media (min-width: 40em) {
   .wordles {
     display: flex;
