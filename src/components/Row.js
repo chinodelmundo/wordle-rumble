@@ -9,7 +9,7 @@ import {
   DialogActions
 } from '@mui/material';
 
-const Row = ({ letters = '', word, finished, emptyRow, definitions }) => {
+const Row = ({ letters = '', word, finished, emptyRow, definitions = [] }) => {
   const [openDlg, setOpenDlg] = useState(false);
   let colors = [];
 
@@ -32,8 +32,12 @@ const Row = ({ letters = '', word, finished, emptyRow, definitions }) => {
   return (
     <>
       <div
-        style={{ display: 'flex', gap: '0.5rem' }}
-        onClick={() => (finished ? setOpenDlg(true) : null)}
+        style={{
+          display: 'flex',
+          gap: '0.5rem',
+          cursor: finished ? 'pointer' : ''
+        }}
+        onClick={() => (finished && !emptyRow ? setOpenDlg(true) : null)}
       >
         <LetterBox letter={emptyRow ? '' : letters[0]} color={colors[0]} />
         <LetterBox letter={emptyRow ? '' : letters[1]} color={colors[1]} />
@@ -45,7 +49,7 @@ const Row = ({ letters = '', word, finished, emptyRow, definitions }) => {
         <DialogTitle>{letters}</DialogTitle>
         <DialogContent>
           <ul>
-            {definitions?.map((def, i) => (
+            {definitions.map((def, i) => (
               <li key={i}>
                 <DialogContentText>{def}</DialogContentText>
               </li>

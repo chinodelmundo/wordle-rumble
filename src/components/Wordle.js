@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Row from './Row';
 
 const Wordle = ({ word, letters, lives, definitions }) => {
@@ -48,6 +49,13 @@ const Wordle = ({ word, letters, lives, definitions }) => {
       )}
     </div>
   );
+};
+
+Wordle.propTypes = {
+  word: PropTypes.string.isRequired,
+  letters: PropTypes.array.isRequired,
+  lives: PropTypes.number.isRequired,
+  definitions: PropTypes.array.isRequired
 };
 
 export default Wordle;

@@ -1,6 +1,8 @@
-import { Typography } from '@mui/material';
+import { Typography, useScrollTrigger } from '@mui/material';
 
 function Keyboard({ lives }) {
+  const trigger = useScrollTrigger();
+
   return (
     <div
       style={{
@@ -9,8 +11,9 @@ function Keyboard({ lives }) {
         width: '100%',
         padding: '0.5rem 0',
         display: 'flex',
-        gap: '0.2rem',
-        justifyContent: 'center'
+        gap: '0.1rem',
+        justifyContent: 'center',
+        top: trigger ? '0' : ''
       }}
     >
       <Typography>Lives: </Typography>
